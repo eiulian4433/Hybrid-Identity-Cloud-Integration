@@ -1,49 +1,50 @@
-# Enterprise Infrastructure & Hybrid Identity Implementation Lab
+# My Home Lab: Active Directory Setup & Hybrid Cloud Sync
 
-## 📋 Technical Overview
-This project demonstrates the end-to-end engineering of an isolated enterprise network infrastructure, moving from an on-premises footprint to a hybrid cloud ecosystem. The architecture implements strict role-based access control (RBAC), centralized network provisioning, zero-trust security policies via Group Objects, secure file-sharing topologies, and directory synchronization with Microsoft Entra ID.
-
----
-
-## 🛠️ Infrastructure Provisioning & Network Topology
-- **Hypervisor Management:** Deployed a 5-node virtualized data center topology consisting of **Windows Server 2022** and **Windows 10 Pro** endpoints.
-- **Static Addressing Plane:** Configured deterministic static networking for core infrastructure assets:
-  - Primary Domain Controller (`DC-01`): `192.168.1.5`
-  - Secondary Member Server (`SV-02`): `192.168.1.6`
-- **Edge Security & Routing:** Implemented Network Address Translation (NAT) via **Routing and Remote Access Services (RRAS)** to provide controlled, secure external internet access while shielding internal assets from direct exposure.
-- **Core Network Dependencies:** Automated internal addressing by configuring a centralized **DHCP Scope** (`192.168.1.100 - .200 /24`) passing the local gateway (`192.168.1.1`) and primary DNS runtime environment (`192.168.1.5`).
-- **Domain Centralization:** Established the local root forest `lab.local` and seamlessly integrated all Windows client machines into the active directory runtime.
+## 📋 Project Overview
+I built an isolated enterprise network from scratch to practice the exact day-to-day tasks of an IT Support Specialist. I set up local network services, created a structured corporate directory, locked down user machines with security rules, configured secure file sharing, and linked everything up to the cloud using Microsoft Entra ID.
 
 ---
 
-## 👥 Directory Architecture & Identity Lifecycle Management
-- **Administrative Isolation:** Provisioned a dedicated, highly privileged Domain Administrator account to strictly decouple operational adjustments from default root assets.
-- **Organizational Unit (OU) Hierarchy:** Modeled a corporate geographic division by engineering a root `Europe` OU, containing discrete departmental sub-OUs (*IT, Design, Administration, Finance, Sales, HR, Marketing, Development, Customer Service*).
-- **Object Ingestion:** Manually provisioned and staged 15 enterprise user identities across target organizational units to replicate corporate staff onboarding workflows.
+## 🛠️ Step 1: Setting Up the Virtual Lab & Network
+- **The Machines:** Deployed a 5-VM environment using **Windows Server 2022** and **Windows 10 Pro** clients.
+- **Static IPs:** Assigned fixed IP addresses to my core servers so they never lose communication:
+  - Domain Controller (`DC-01`): `192.168.1.5`
+  - Backup/Second Server (`SV-02`): `192.168.1.6`
+- **Routing & Internet:** Set up **NAT and RRAS** (Routing and Remote Access) so my internal lab machines can safely download updates from the internet without being exposed to the outside world.
+- **DHCP & DNS:** Configured a DHCP scope (`192.168.1.100` to `.200`) to automatically give IP addresses to my client machines, setting the gateway to `192.168.1.1` and DNS to my server (`192.168.1.5`).
+- **Joining the Domain:** Created a local domain called `lab.local` and joined all 3 Windows 10 client computers to it.
 
 ---
 
-## 🔐 System Hardening & Group Policy Enforcement
-Designed and implemented corporate security baselines using the Group Policy Management Console (GPMC), verifying enforcement at the client layer:
-- **Account Security Baseline:** Mandated an enterprise-grade password policy forcing a minimum length of 10 characters, an account lockout threshold of 2 attempts, and a 30-minute lockout duration.
-- **Perimeter Control:** Enforced absolute storage hardware restrictions via a "Deny All Access" policy on removable media drives to prevent data exfiltration.
-- **Endpoint Hardening:** Prohibited system modification surfaces by disabling end-user driver installations and completely restricting access to the Control Panel and Windows PC Settings.
-- **Policy Compliance Verification:** Successfully audited restrictions on client machines; validated the password complexity baseline by attempting an invalid account reset, which was blocked by domain policy rules.
+## 👥 Step 2: Active Directory & Managing Users
+- **Admin Account:** Created a separate domain admin account for myself to follow best practices (instead of using the default Administrator account).
+- **Organization Structure:** Built a main Organizational Unit (OU) called `Europe`. Inside it, I made sub-folders for different departments like *IT, Design, Administration, Finance, Sales, HR, Marketing, Development, and Customer Service*.
+- **Creating Users:** Manually created 15 different test users and placed them into their correct department folders to simulate a real company workforce.
 
 ---
 
-## 📁 Access Control & File Services (RBAC)
-- **Security Group Strategy:** Created Departmental Security Groups (`SG_Administration`, `SG_Design`, etc.) and structured explicit user mappings to support a scalable Role-Based Access Control model.
-- **Secure File Share Topography:** Provisioned an isolated network share (`it_department`) hardened under the principle of least privilege:
-  - Stripped default `Everyone` read access permissions.
-  - Disabled NTFS inheritance to completely break global directory visibility down the filesystem tree.
-  - Assigned explicit `Modify` permissions to `SG_IT` while purging the generic `Authenticated Users` scope.
-- **Cross-Identity Share Audit:** Verified explicit isolation; users belonging to `SG_IT` enumerated and modified files successfully, while unauthorized department accounts were denied entry.
-- **Automated Storage Mapping:** Engineered a Group Policy Preference (GPP) drive-mapping object (`GPO_Map_IT_Drive`) leveraging **Item-Level Targeting** to dynamically mount the `G:` drive *only* to verified members of `SG_IT`.
+## 🔐 Step 3: Security & Group Policy Objects (GPOs)
+I created and tested Group Policies to see how an IT department locks down company computers:
+- **Password Rules:** Enforced a strong password policy (minimum 10 characters, locked out after 2 failed attempts, with a 30-minute cooldown).
+- **USB Block:** Blocked all access to USBs and removable storage to prevent malware or data theft.
+- **App/Driver Lock:** Disabled standard users from installing hardware drivers.
+- **Settings Block:** Completely blocked access to the Control Panel and Windows Settings.
+- **Testing My Work:** Logged into a client machine as a standard user and verified that the Control Panel was blocked. I also tried to change a password to a short one and watched the system block it, proving my security rules work!
 
 ---
 
-## ☁️ Hybrid Cloud Synchronization (Entra ID)
-- **Directory Ingestion Engine:** Deployed and configured the Microsoft Entra Connect Synchronization framework on the local directory platform.
-- **Scope Scoping & Filtering:** Implemented precise OU target filtering during the configuration phase to exclusively synchronize the corporate workforce identities while omitting standard service accounts.
-- **Cloud Verification:** Conducted a post-implementation audit via the **Microsoft Entra Admin Center**, verifying that all 15 identities were successfully active in the cloud instance with an official status identifier of **"On-Premises Synced"**.
+## 📁 Step 4: Shared Folders & Network Drives
+- **Security Groups:** Created specific security groups for each department (`SG_it`, `SG_design`, `SG_administration`, etc.) and added my 15 users to them.
+- **Secure File Share:** Created an `it_department` folder and secured it so only the IT team could see it:
+  - Removed the default "Everyone" and "Authenticated Users" access.
+  - Disabled folder inheritance so permissions don't bleed down from the C: drive.
+  - Gave `SG_it` explicit "Modify" permissions.
+- **Testing Permissions:** Logged in as an IT user and confirmed they could access the folder. Then, logged in as an HR user and confirmed they were blocked.
+- **Mapped Network Drives:** Configured a Group Policy to automatically map a `G:` drive on user computers, but used **Item-Level Targeting** so the drive only appears for people inside the `SG_it` security group.
+
+---
+
+## ☁️ Step 5: Connecting to the Hybrid Cloud (Entra ID)
+- **Microsoft Entra Connect:** Downloaded and ran the setup wizard to sync my local lab with the cloud.
+- **Filtering Users:** Adjusted the sync settings so it only uploaded my employee folders, leaving behind local system accounts.
+- **Cloud Verification:** Logged into the cloud-based **Microsoft Entra Admin Center** and verified that all 15 users were successfully created online and marked as "On-premises synced."

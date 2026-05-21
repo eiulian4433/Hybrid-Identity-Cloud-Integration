@@ -7,17 +7,33 @@ I built an isolated enterprise network from scratch to practice the exact day-to
 
 ## 🛠️ Step 1: Setting Up the Virtual Lab & Network
 - **The Machines:** Deployed a 5-VM environment using **Windows Server 2022** and **Windows 10 Pro** clients.
+  <img width="805" height="868" alt="Screenshot (28)" src="https://github.com/user-attachments/assets/e2c78131-12fa-4c73-bbb4-9b16e08dcf61" />
+
 - **Static IPs:** Assigned fixed IP addresses to my core servers so they never lose communication:
   - Domain Controller (`DC-01`): `192.168.1.5`
-  - Backup/Second Server (`SV-02`): `192.168.1.6`
-- **Routing & Internet:** Set up **NAT and RRAS** (Routing and Remote Access) so my internal lab machines can safely download updates from the internet without being exposed to the outside world.
-- **DHCP & DNS:** Configured a DHCP scope (`192.168.1.100` to `.200`) to automatically give IP addresses to my client machines, setting the gateway to `192.168.1.1` and DNS to my server (`192.168.1.5`).
-- **Joining the Domain:** Created a local domain called `lab.local` and joined all 3 Windows 10 client computers to it.
+    <img width="1389" height="1119" alt="Screenshot (4)" src="https://github.com/user-attachments/assets/003fd7a4-58f9-42bf-944a-fa083bc653b7" />
 
+  - Backup/Second Server (`SV-02`): `192.168.1.6`
+    <img width="1585" height="1210" alt="Screenshot (37)" src="https://github.com/user-attachments/assets/3bcf7bbc-274a-4708-a24b-fd37906a8024" />
+
+- **Routing & Internet:** Set up **NAT and RRAS** (Routing and Remote Access) so my internal lab machines can safely download updates from the internet without being exposed to the outside world.
+ <img width="1381" height="1147" alt="Screenshot (20)" src="https://github.com/user-attachments/assets/593f662b-cc0b-4aac-b615-5dfffe565a7f" />
+
+- **DHCP & DNS:** Configured a DHCP scope (`192.168.1.100` to `.200`) to automatically give IP addresses to my client machines, setting the gateway to `192.168.1.1` and DNS to my server (`192.168.1.5`).
+<img width="1385" height="1142" alt="Screenshot (24)" src="https://github.com/user-attachments/assets/a9d7eea9-9e97-4278-82c2-dd52c5e8d664" />
+<img width="1379" height="1142" alt="Screenshot (23)" src="https://github.com/user-attachments/assets/cda19fd8-1664-4577-8970-6f68cb959825" />
+
+- **Joining the Domain:** Created a local domain called `lab.local` and joined all 3 Windows 10 client computers to it.
+<img width="1389" height="1142" alt="Screenshot (7)" src="https://github.com/user-attachments/assets/4d36f484-e045-46e2-8e38-0df0eb00d264" />
 ---
 
 ## 👥 Step 2: Active Directory & Managing Users
+
+<img width="1391" height="1153" alt="Screenshot (5)" src="https://github.com/user-attachments/assets/0ab1c5b4-056d-4747-a957-e6661ca407ba" />
+
 - **Admin Account:** Created a separate domain admin account for myself to follow best practices (instead of using the default Administrator account).
+ <img width="1388" height="1144" alt="Screenshot (14)" src="https://github.com/user-attachments/assets/b2217d5c-1770-4538-bfea-ebebd4ff5dfe" />
+
 - **Organization Structure:** Built a main Organizational Unit (OU) called `Europe`. Inside it, I made sub-folders for different departments like *IT, Design, Administration, Finance, Sales, HR, Marketing, Development, and Customer Service*.
 - **Creating Users:** Manually created 15 different test users and placed them into their correct department folders to simulate a real company workforce.
 

@@ -3,6 +3,7 @@
 ## 📋 Project Overview
 I built an isolated enterprise network from scratch to practice the exact day-to-day tasks of an IT Support Specialist. I set up local network services, created a structured corporate directory, locked down user machines with security rules, configured secure file sharing, and linked everything up to the cloud using Microsoft Entra ID.
 
+// added DNS Round Robin combined with DHCP Failover
 ---
 
 ## 🛠️ Step 1: Setting Up the Virtual Lab & Network
@@ -19,7 +20,7 @@ I built an isolated enterprise network from scratch to practice the exact day-to
 - **Routing & Internet:** Set up **NAT and RRAS** (Routing and Remote Access) so my internal lab machines can safely download updates from the internet without being exposed to the outside world.
  <img width="1381" height="1147" alt="Screenshot (20)" src="https://github.com/user-attachments/assets/593f662b-cc0b-4aac-b615-5dfffe565a7f" />
 
-- **DHCP & DNS:** Configured a DHCP scope (`192.168.1.100` to `.200`) to automatically give IP addresses to my client machines, setting the gateway to `192.168.1.1` and DNS to my server (`192.168.1.5`).
+- **DHCP & DNS:** Configured a DHCP scope (`192.168.1.200` to `.250`) to automatically give IP addresses to my client machines, setting the gateway to `192.168.1.1` and DNS to my server (`192.168.1.5`).
 <img width="1385" height="1142" alt="Screenshot (24)" src="https://github.com/user-attachments/assets/a9d7eea9-9e97-4278-82c2-dd52c5e8d664" />
 <img width="1379" height="1142" alt="Screenshot (23)" src="https://github.com/user-attachments/assets/cda19fd8-1664-4577-8970-6f68cb959825" />
 
@@ -104,3 +105,14 @@ I created and tested Group Policies to see how an IT department locks down compa
 
 - **Cloud Verification:** Logged into the cloud-based **Microsoft Entra Admin Center** and verified that all 15 users were successfully created online and marked as "On-premises synced."
 <img width="1959" height="1206" alt="Screenshot (158)" src="https://github.com/user-attachments/assets/400b3b83-a589-4cb3-af0d-63eea1f75e6d" />
+
+
+---
+## ⚖️ Step 6: Enterprise High Availability & Load Balancing
+- **Replica Domain Controller:** Promoted `SV-02` to a secondary Domain Controller to securely replicate Active Directory objects, ensuring global database redundancy if `DC-01` undergoes system maintenance or downtime.
+- **Active-Active DHCP Failover:** Engineered an active-active 50/50 DHCP Failover Relationship between both core servers. Both machines actively distribute IP leases simultaneously, preventing lease exhaustion and endpoint network drops.
+- **Resilient Client Failover:** Configured scope options to pass both `.1.5` and `.1.6` as DNS authorities. Tested and verified that shutting down the primary domain controller (`DC-01`) triggers an instantaneous client failover to `SV-02`, keeping endpoint web browsing fully active.
+- **Advanced Troubleshooting:** Gained hands-on experience diagnosing and resolving disconnected failover relationship database locks by manually purging system configurations, clearing service caches, and restoring healthy cluster states.
+
+
+

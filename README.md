@@ -110,8 +110,14 @@ I created and tested Group Policies to see how an IT department locks down compa
 ---
 ## ⚖️ Step 6: Enterprise High Availability & Load Balancing
 - **Replica Domain Controller:** Promoted `SV-02` to a secondary Domain Controller to securely replicate Active Directory objects, ensuring global database redundancy if `DC-01` undergoes system maintenance or downtime.
+  <img width="1457" height="931" alt="Screenshot (174)" src="https://github.com/user-attachments/assets/a9c6becb-1906-4ffb-ba36-31d9d4508106" />
+
 - **Active-Active DHCP Failover:** Engineered an active-active 50/50 DHCP Failover Relationship between both core servers. Both machines actively distribute IP leases simultaneously, preventing lease exhaustion and endpoint network drops.
+  <img width="877" height="642" alt="Screenshot (181)" src="https://github.com/user-attachments/assets/c6ded079-7050-478a-b654-484182b2b833" />
+
 - **Resilient Client Failover:** Configured scope options to pass both `.1.5` and `.1.6` as DNS authorities. Tested and verified that shutting down the primary domain controller (`DC-01`) triggers an instantaneous client failover to `SV-02`, keeping endpoint web browsing fully active.
+  <img width="1056" height="709" alt="Screenshot (186)" src="https://github.com/user-attachments/assets/042961e9-0a6f-419a-b303-0ee9c2041138" />
+
 - **Advanced Troubleshooting:** Gained hands-on experience diagnosing and resolving disconnected failover relationship database locks by manually purging system configurations, clearing service caches, and restoring healthy cluster states.
 
 
